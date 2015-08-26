@@ -19,6 +19,14 @@
 
 include_recipe 'golang'
 
+if node['go']['clean_before_install']
+  node['go']['packages'].each do |package|
+    golang_package package do
+      action :clean
+    end
+  end
+end
+
 node['go']['packages'].each do |package|
   golang_package package
 end

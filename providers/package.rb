@@ -76,3 +76,22 @@ action :build do
 
   new_resource.updated_by_last_action(b.updated?)
 end
+
+action :clean do
+
+  b = bash "Cleaning package #{new_resource.name}" do
+    code "#{node['go']['install_dir']}/go/bin/go clean -r -i #{new_resource.name}"
+    action :nothing
+    user node['go']['owner']
+    group node['go']['group']
+    environment({
+      'GOPATH' => node['go']['gopath'],
+      'GOBIN' => node['go']['gobin']
+    })
+  end
+
+  b.run_action(:run)
+
+  new_resource.updated_by_last_action(b.updated?)
+end
+
